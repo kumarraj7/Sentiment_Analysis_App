@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Emotion AI Pro 🚀</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(-45deg, #667eea, #764ba2, #ff758c, #42e695);
+    background-size: 400% 400%;
+    animation: gradientBG 10s ease infinite;
+    overflow: hidden;
+}
+
+/* Floating emojis */
+.emoji {
+    position: absolute;
+    font-size: 28px;
+    opacity: 0.12;
+    animation: float 12s infinite ease-in-out;
+}
+.emoji:nth-child(1){top:10%;left:20%;}
+.emoji:nth-child(2){top:70%;left:10%;}
+.emoji:nth-child(3){top:40%;left:80%;}
+.emoji:nth-child(4){top:80%;left:70%;}
+
+/* Container */
+.container {
+    width: 540px;
+    padding: 35px;
+    border-radius: 25px;
+    backdrop-filter: blur(20px);
+    background: rgba(255,255,255,0.1);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    text-align: center;
+    color: white;
+}
+
+/* Title */
+h1 {
+    margin-bottom: 15px;
+}
+
+/* Textarea */
+textarea {
+    width: 100%;
+    height: 120px;
+    padding: 15px;
+    border-radius: 12px;
+    border: none;
+    outline: none;
+    resize: none;
+    margin-bottom: 15px;
+}
+
+/* Buttons */
+.btn-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    background: linear-gradient(45deg,#ff7eb3,#ff758c);
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.08);
+}
+
+/* Progress bar */
+.progress-container {
+    width: 100%;
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    margin-top: 15px;
+    overflow: hidden;
+}
+
+.progress {
+    height: 10px;
+    width: 0%;
+    background: #00ffcc;
+    transition: 0.4s;
+}
+
+/* Result */
+.result {
+    margin-top: 20px;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/* Colors */
+.positive { color:#00ffcc; }
+.negative { color:#ff4d6d; }
+.neutral { color:#ffd166; }
+
+/* Animations */
+@keyframes gradientBG {
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+@keyframes float {
+    50%{transform:translateY(-40px);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="emoji">😊</div>
+<div class="emoji">😐</div>
+<div class="emoji">😡</div>
+<div class="emoji">😍</div>
+
+<div class="container">
+    <h1>🧠 Emotion AI Pro</h1>
+
+    <form method="POST">
+        <textarea id="textInput" name="text" placeholder="Type or speak your feelings...">{{ text }}</textarea>
+
+        <div class="btn-group">
+            <button type="submit">Analyze 🚀</button>
+            <button type="button" onclick="startVoice()">🎤 Speak</button>
+        </div>
+    </form>
+
+    <!-- Progress bar (optional, static unless backend updates it) -->
+    <div class="progress-container">
+        <div class="progress" id="progressBar"></div>
+    </div>
+
+    {% if prediction %}
+        <div class="result {{ prediction }}">
+            {% if prediction == "positive" %} 😊 Positive
+            {% elif prediction == "negative" %} 😡 Negative
+            {% else %} 😐 Neutral
+            {% endif %}
+        </div>
+
+        <script>
+            // Animate progress bar when result comes
+            const bar = document.getElementById("progressBar");
+            {% if prediction == "positive" %}
+                bar.style.width = "85%";
+                bar.style.background = "#00ffcc";
+            {% elif prediction == "negative" %}
+                bar.style.width = "85%";
+                bar.style.background = "#ff4d6d";
+            {% else %}
+                bar.style.width = "50%";
+                bar.style.background = "#ffd166";
+            {% endif %}
+        </script>
+    {% endif %}
+</div>
+
+<script>
+// Voice input
+function startVoice() {
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.start();
+
+    recognition.onresult = function(event) {
+        document.getElementById("textInput").value = event.results[0][0].transcript;
+    }
+}
+</script>
+
+</body>
+</html>
