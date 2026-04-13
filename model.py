@@ -7,16 +7,15 @@ bert_model = pipeline(
     model="cardiffnlp/twitter-roberta-base-sentiment-latest"
 )
 
-# -------------------- PREDICT --------------------
+
 def predict_sentiment(text):
     try:
         result = bert_model(text[:512])[0]
 
-        print("Raw Output:", result)   # Debug line
+        print("Raw Output:", result)
 
-        label = result['label'].lower()   # normalize
+        label = result['label'].lower()  
 
-        # Direct mapping (no LABEL_X assumption)
         if "positive" in label:
             return "positive"
         elif "neutral" in label:
